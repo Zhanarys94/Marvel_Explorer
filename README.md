@@ -1,3 +1,52 @@
+**English:**
+# Marvel Explorer
+
+"Marvel Explorer" is a mobile application created for fans of the Marvel universe. It allows users to browse a list of heroes and obtain detailed information about each of them.
+
+## Key Features and Capabilities:
+
+- **Viewing the list of Marvel heroes:**
+  - Retrieve lists of Marvel characters.
+
+- **Getting detailed information about a Marvel hero:**
+  - Obtain comprehensive information about a specific Marvel hero.
+
+- **Viewing the list of comics featuring a hero:**
+  - Retrieve lists of comics in which a specific Marvel hero participates.
+
+## Requirements:
+
+- **Android Version:**
+  - `minSDK = 24`
+  - `targetSDK = 34`
+
+- **Libraries and Dependencies:**
+  1. The Marvel Comics API: To fetch data about Marvel heroes and comics.
+  2. Room: For database operations and local data storage.
+  3. Coil: For efficient image loading.
+  4. Retrofit: For handling network requests.
+
+## Usage:
+
+**Navigation within the App:**
+
+1. After installation, open the "Marvel Explorer" application.
+2. Navigate to the main screen, where you'll find a list of Marvel heroes.
+
+**Viewing the List of Marvel Heroes:**
+
+- On the main screen, you'll find a list of heroes. Scroll down to view all available characters.
+
+**Getting Detailed Information about a Hero:**
+
+- Tap on the hero's name to view detailed information. Here, you'll find images and data about the hero.
+
+**Viewing the List of Comics featuring a Hero:**
+
+- In the section with detailed hero information, find the "Comics" tab to view a list of comics in which the selected hero participates.
+
+
+**Русский:**
 # Marvel Explorer
 
 "Marvel Explorer" - мобильное приложение, созданное для поклонников вселенной Marvel, позволяющая просматривать список героев и получать детальную информацию о каждом из них.
