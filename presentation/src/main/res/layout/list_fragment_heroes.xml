@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/listHeroesFragmentSearchBarEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Start typing character name to search..."
+        android:inputType="text"
+        android:layout_gravity="top"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listHeroesFragmentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="630dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_gravity="center_vertical"
+        android:scrollbars="vertical" />
+
+    <Button
+        android:id="@+id/listHeroesFragmentToSavedListButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Saved List"
+        android:layout_gravity="bottom"/>
+
+
+</LinearLayout>
