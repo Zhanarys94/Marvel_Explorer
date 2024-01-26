@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
-import kz.zhanarys.domain.HeroShortInfo
+import kz.zhanarys.domain.model.hero.HeroShortInfo
 import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
 
@@ -57,7 +57,7 @@ class HeroesListAdapter : ListAdapter<HeroShortInfo, HeroesListAdapter.HeroViewH
                 placeholder(R.drawable.loading_placeholder)
                 crossfade(true)
             }
-            shortInfo.text = item.getShortInfo()
+            shortInfo.text = item.shortInfo
 
             likeButton.setOnClickListener {
                 onButtonLikeClickListener?.onLikeClick(item)
@@ -79,7 +79,7 @@ class HeroesListAdapter : ListAdapter<HeroShortInfo, HeroesListAdapter.HeroViewH
                     placeholder(R.drawable.loading_placeholder)
                     crossfade(true)
                 }
-                shortInfo.text = item.getShortInfo()
+                shortInfo.text = item.shortInfo
             }
 
             if (ChangeField.NAME in changes) {
@@ -92,7 +92,7 @@ class HeroesListAdapter : ListAdapter<HeroShortInfo, HeroesListAdapter.HeroViewH
                 }
             }
             if (ChangeField.SHORT_INFO in changes) {
-                shortInfo.text = item.getShortInfo()
+                shortInfo.text = item.shortInfo
             }
         }
     }
