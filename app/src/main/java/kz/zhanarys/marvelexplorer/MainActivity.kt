@@ -4,17 +4,17 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kz.zhanarys.data.db.CharactersDatabase
+import kz.zhanarys.data.repositories.local.CharactersLocalDatabase
 import kz.zhanarys.marvelexplorer.databinding.ActivityMainBinding
 import kz.zhanarys.marvelexplorer.heroesList.CharactersListFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
-    CharactersListFragment.HeroesListFragmentInteractionListener
+    CharactersListFragment.MainListFragmentInteractionListener
 {
     private lateinit var binding: ActivityMainBinding
-    @Inject lateinit var charactersDatabase: CharactersDatabase
+    @Inject lateinit var charactersLocalDatabase: CharactersLocalDatabase
 
 
     @Inject lateinit var viewModelFactory: SharedViewModelFactory
@@ -33,7 +33,12 @@ class MainActivity : AppCompatActivity(),
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedViewModel.fetchData()
+        setSupportActionBar(binding.toolbar)
+        val actionBar = supportActionBar
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
+
+        sharedViewModel.updateMainListData()
 
 /*        sharedViewModel.stateLiveData.observe(this) {
             if (it == ViewState.MAIN) {
@@ -50,6 +55,11 @@ class MainActivity : AppCompatActivity(),
                 sharedViewModel.toSavedListButtonClick()
             }
         }*/
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onSearchBarChange(text: String) {

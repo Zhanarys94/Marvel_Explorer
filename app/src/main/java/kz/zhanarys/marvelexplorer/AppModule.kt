@@ -10,11 +10,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kz.zhanarys.data.db.MarvelCharacterDao
-import kz.zhanarys.data.db.CharactersDatabase
-import kz.zhanarys.data.marvelApi.MarvelRetrofitRepository
-import kz.zhanarys.data.marvelApi.RetrofitMarvelRest
-import kz.zhanarys.domain.repositoriesInterface.MarvelRetrofitRepositoryI
+import kz.zhanarys.data.repositories.local.CharactersDao
+import kz.zhanarys.data.repositories.local.CharactersLocalDatabase
+import kz.zhanarys.data.repositories.network.MarvelApiRepository
+import kz.zhanarys.data.repositories.network.MarvelApiRest
+import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -22,10 +22,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppBindingsModule {
+abstract class NetworkModule {
     @Binds
     @Singleton
-    abstract fun bindRepository(repository: MarvelRetrofitRepository): MarvelRetrofitRepositoryI
+    abstract fun provideApiRepository(apiRepository: MarvelApiRepository): ApiRepository
 }
 
 @Module
@@ -36,17 +36,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): CharactersDatabase {
+    fun provideAppDatabase(@ApplicationContext context: Context): CharactersLocalDatabase {
         return Room.databaseBuilder(
             context,
-            CharactersDatabase::class.java,
+            CharactersLocalDatabase::class.java,
             "heroes.db"
         ).build()
     }
 
     @Provides
-    fun provideHeroDao(database: CharactersDatabase): MarvelCharacterDao {
-        return database.heroDao()
+    fun provideHeroDao(database: CharactersLocalDatabase): CharactersDao {
+        return database.characterDao()
     }
 
     @Provides
@@ -68,7 +68,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMarvelRetrofitService(retrofit: Retrofit): RetrofitMarvelRest {
-        return retrofit.create(RetrofitMarvelRest::class.java)
+    fun provideMarvelRetrofitService(retrofit: Retrofit): MarvelApiRest {
+        return retrofit.create(MarvelApiRest::class.java)
     }
 }

@@ -3,20 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_weight="0.06"/>
+        android:layout_weight="0.01"
+        android:visibility="visible"
+        android:minHeight="?attr/actionBarSize"
+        app:titleCentered="true"
+        app:titleTextAppearance="?attr/textAppearanceHeadline5"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mainFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="0.94"/>
+        android:layout_weight="0.99"/>
 </LinearLayout>

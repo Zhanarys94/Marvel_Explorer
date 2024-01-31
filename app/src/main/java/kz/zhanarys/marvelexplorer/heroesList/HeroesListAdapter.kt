@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
-import coil.request.CachePolicy
-import kz.zhanarys.domain.entities.CharacterEntity
+import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
 
-class HeroesListAdapter : ListAdapter<CharacterEntity, HeroesListAdapter.HeroViewHolder>(
+class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.HeroViewHolder>(
     DiffCallbackObj
 ) {
     private var onItemClickListener: OnItemClickListener? = null
@@ -39,33 +38,31 @@ class HeroesListAdapter : ListAdapter<CharacterEntity, HeroesListAdapter.HeroVie
         payloads: MutableList<Any>
     ) {
         holder.itemView.setOnClickListener {
-            onItemClickListener?.onItemClick((getItem(holder.adapterPosition)) as CharacterEntity, holder.adapterPosition)
+            onItemClickListener?.onItemClick((getItem(holder.adapterPosition)) as CharacterItemModel, holder.adapterPosition)
         }
         holder.bind(getItem(position), onButtonLikeClickListener, payloads)
     }
 
     inner class HeroViewHolder(private val view: View) : ViewHolder(view) {
         fun bind(
-            item: CharacterEntity,
+            item: CharacterItemModel,
             onButtonLikeClickListener: OnButtonLikeClickListener?,
             payloads: MutableList<Any>
         ) {
-            val imageVariant = "/standard_xlarge"
+            val imageVariant = "/standard_large"
             val imageUrl = item.imageUrl + imageVariant + item.imageExtension
 
-            val image = view.findViewById<ImageView>(R.id.heroItemImage)
-            val name = view.findViewById<TextView>(R.id.heroItemName)
-            val shortInfo = view.findViewById<TextView>(R.id.heroItemShortDescription)
-            val likeButton = view.findViewById<ImageButton>(R.id.heroItemLikeButton)
+            val image = view.findViewById<ImageView>(R.id.characterItemImage)
+            val name = view.findViewById<TextView>(R.id.characterItemName)
+            val likeButton = view.findViewById<ImageButton>(R.id.characterItemLikeButton)
 
             name.text = item.name
             image.load(imageUrl) {
                 crossfade(true)
                 placeholder(R.drawable.loading_placeholder)
             }
-            shortInfo.text = item.shortInfo
 
-            likeButton.setImageResource(R.drawable.img_white_heart)
+            likeButton.setImageResource(R.drawable.shiled_grey)
             likeButton.setOnClickListener {
                 onButtonLikeClickListener?.onLikeClick(item)
             }
@@ -86,7 +83,6 @@ class HeroesListAdapter : ListAdapter<CharacterEntity, HeroesListAdapter.HeroVie
                     placeholder(R.drawable.loading_placeholder)
                     crossfade(true)
                 }
-                shortInfo.text = item.shortInfo
             }
 
             if (ChangeField.NAME in changes) {
@@ -97,9 +93,6 @@ class HeroesListAdapter : ListAdapter<CharacterEntity, HeroesListAdapter.HeroVie
                     placeholder(R.drawable.loading_placeholder)
                     crossfade(true)
                 }
-            }
-            if (ChangeField.SHORT_INFO in changes) {
-                shortInfo.text = item.shortInfo
             }
         }
     }
@@ -113,20 +106,20 @@ class HeroesListAdapter : ListAdapter<CharacterEntity, HeroesListAdapter.HeroVie
     }
 
     interface OnButtonLikeClickListener {
-        fun onLikeClick(item: CharacterEntity)
+        fun onLikeClick(item: CharacterItemModel)
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: CharacterEntity, position: Int)
+        fun onItemClick(item: CharacterItemModel, position: Int)
     }
 }
 
-object DiffCallbackObj : DiffUtil.ItemCallback<CharacterEntity>() {
-    override fun areItemsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity): Boolean {
+object DiffCallbackObj : DiffUtil.ItemCallback<CharacterItemModel>() {
+    override fun areItemsTheSame(oldItem: CharacterItemModel, newItem: CharacterItemModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity): Boolean {
+    override fun areContentsTheSame(oldItem: CharacterItemModel, newItem: CharacterItemModel): Boolean {
         return oldItem == newItem
     }
 }
