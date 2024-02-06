@@ -1,9 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MarvelExplorer" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="MarvelExplorer" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/marvel_red</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/marvel_red_dark</item>
+        <item name="colorSecondary">@color/marvel_blue</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/marvel_blue_dark</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorError">@color/marvel_red_dark</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance_Marvel.Headline6</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance_Marvel.Headline5</item>
+        <item name="textAppearanceBody1">@style/TextAppearance_Marvel.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance_Roboto.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance_Marvel.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance_Marvel.Caption</item>
+        <item name="fontFamily">@font/marvel_font_family</item>
     </style>
-
-    <style name="Theme.MarvelExplorer" parent="Base.Theme.MarvelExplorer" />
 </resources>

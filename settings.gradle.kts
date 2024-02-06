@@ -14,5 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Marvel Explorer"
-include(":app")
- 
+include("app", "domain", "data")

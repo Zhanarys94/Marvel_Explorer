@@ -1,11 +1,77 @@
 package kz.zhanarys.marvelexplorer
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
+import kz.zhanarys.data.repositories.local.CharactersLocalRepository
+import kz.zhanarys.marvelexplorer.databinding.ActivityMainBinding
+import kz.zhanarys.marvelexplorer.charactersList.CharactersListFragment
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(),
+    CharactersListFragment.MainListFragmentInteractionListener
+{
+    private lateinit var binding: ActivityMainBinding
+    @Inject lateinit var charactersLocalRepository: CharactersLocalRepository
+
+
+    @Inject lateinit var viewModelFactory: SharedViewModelFactory
+    private val sharedViewModel: SharedViewModel by viewModels {
+        viewModelFactory
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.mainFragmentContainer, CharactersListFragment(), "MainHeroesListFragment")
+                .commit()
+        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        val actionBar = supportActionBar
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
+
+        sharedViewModel.updateMainListData()
+
+/*        sharedViewModel.stateLiveData.observe(this) {
+            if (it == ViewState.MAIN) {
+                supportFragmentManager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.mainFragmentContainer, HeroesListFragment(), "MainHeroesListFragment")
+                    .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.mainFragmentContainer, SavedHeroesListFragment(), "SavedListFragment")
+                    .addToBackStack("SavedListFragment")
+                    .commit()
+                sharedViewModel.toSavedListButtonClick()
+            }
+        }*/
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onSearchBarChange(text: String) {
+        sharedViewModel.setSearchBar(text)
+    }
+
+    override fun toSavedListButtonClick() {
+/*        supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.mainFragmentContainer, SavedHeroesListFragment(), "SavedListFragment")
+            .addToBackStack("SavedListFragment")
+            .commit()
+        sharedViewModel.toSavedListButtonClick()*/
     }
 }

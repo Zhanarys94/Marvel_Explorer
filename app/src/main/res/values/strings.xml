@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Marvel Explorer</string>
+    <string name="character_portrait">Character portrait</string>
+    <string name="add_this_character_to_favorites">description_item_saveButton</string>
 </resources>
