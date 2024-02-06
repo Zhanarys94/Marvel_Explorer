@@ -2,6 +2,8 @@ package kz.zhanarys.data.repositories.network
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kz.zhanarys.data.repositories.local.CharacterEntity
+import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
 
 
@@ -127,6 +129,17 @@ fun CharacterDto.toCharacterItemModel(): CharacterItemModel {
         "." + thumbnail.extension,
         shortInfo,
         false
+    )
+}
+
+fun CharacterDto.toCharacterEntityModel(): CharacterEntityModel {
+    return CharacterEntityModel(
+        id,
+        name,
+        thumbnail.path.replace("http", "https"),
+        "." + thumbnail.extension,
+        shortInfo,
+        urls.find { it.type == "detail" }?.url ?: ""
     )
 }
 

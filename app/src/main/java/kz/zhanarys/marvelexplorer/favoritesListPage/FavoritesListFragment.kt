@@ -1,4 +1,4 @@
-package kz.zhanarys.marvelexplorer.savedHeroesPage
+package kz.zhanarys.marvelexplorer.favoritesListPage
 
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.SharedViewModel
 import kz.zhanarys.marvelexplorer.databinding.FragmentFavoritesBinding
-import kz.zhanarys.marvelexplorer.heroesList.HeroesListAdapter
+import kz.zhanarys.marvelexplorer.CharactersListAdapter
 
 @AndroidEntryPoint
 class FavoritesListFragment: Fragment() {
@@ -40,23 +40,23 @@ class FavoritesListFragment: Fragment() {
         val searchBar = binding!!.favoritesFragmentSearchBarEditText
         val recyclerView = binding!!.favoritesFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = HeroesListAdapter()
+        recyclerView.adapter = CharactersListAdapter()
 
         sharedViewModel.favoritesListLiveData.observe(viewLifecycleOwner) { savedList ->
-            (recyclerView.adapter as HeroesListAdapter).submitList(savedList.toList())
+            (recyclerView.adapter as CharactersListAdapter).submitList(savedList.toList())
         }
 
-        (recyclerView.adapter as HeroesListAdapter).apply {
+        (recyclerView.adapter as CharactersListAdapter).apply {
             setOnItemClickListener(
-                object : HeroesListAdapter.OnItemClickListener {
-                    override fun onItemClick(item: CharacterItemModel, position: Int) {
+                object : CharactersListAdapter.OnItemClickListener {
+                    override fun onItemClick(item: CharacterItemModel) {
                         // TODO
                     }
                 }
             )
 
             setOnButtonLikeClickListener(
-                object : HeroesListAdapter.OnButtonLikeClickListener {
+                object : CharactersListAdapter.OnButtonLikeClickListener {
                     override fun onLikeClick(item: CharacterItemModel) {
                         // TODO
                     }

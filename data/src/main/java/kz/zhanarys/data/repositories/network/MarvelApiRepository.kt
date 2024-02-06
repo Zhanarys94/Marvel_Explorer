@@ -3,6 +3,7 @@ package kz.zhanarys.data.repositories.network
 import kz.zhanarys.data.repositories.network.configurations.Timestamp
 import kz.zhanarys.data.repositories.network.configurations.Md5
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
+import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,12 +31,12 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
         }
     }
 
-    override suspend fun getCharacterById(id: Int, offset: Int, limit: Int): CharacterItemModel {
+    override suspend fun getCharacterById(id: Int): CharacterEntityModel {
         val formattedTimestamp = timestamp.generateFormattedTimestamp(timestamp.generateTimestamp())
         val hash = md5.md5(formattedTimestamp + PRIVATE_KEY + PUBLIC_KEY)
-        retrofit.getCharacterById(id, formattedTimestamp, PUBLIC_KEY, hash, offset, limit).let { response ->
+        retrofit.getCharacterById(id, formattedTimestamp, PUBLIC_KEY, hash).let { response ->
             if (response.code == 200) {
-                return response.data.results.first().toCharacterItemModel()
+                return response.data.results.first().toCharacterEntityModel()
             } else {
                 throw MarvelApiException("Error ${response.code} ${response.status}")
             }

@@ -25,9 +25,7 @@ interface MarvelApiRest {
         @Path("characterId") characterId: Int,
         @Query("ts") timestamp: String,
         @Query("apikey") publicKey: String,
-        @Query("hash") hash: String,
-        @Query("offset") offset: Int,
-        @Query("limit") limit: Int
+        @Query("hash") hash: String
     ): CharacterDataWrapperDto
 
     @GET("v1/public/characters")

@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kz.zhanarys.data.repositories.local.CharactersLocalDatabase
+import kz.zhanarys.data.repositories.local.CharactersLocalRepository
 import kz.zhanarys.marvelexplorer.databinding.ActivityMainBinding
-import kz.zhanarys.marvelexplorer.heroesList.CharactersListFragment
+import kz.zhanarys.marvelexplorer.charactersList.CharactersListFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(),
     CharactersListFragment.MainListFragmentInteractionListener
 {
     private lateinit var binding: ActivityMainBinding
-    @Inject lateinit var charactersLocalDatabase: CharactersLocalDatabase
+    @Inject lateinit var charactersLocalRepository: CharactersLocalRepository
 
 
     @Inject lateinit var viewModelFactory: SharedViewModelFactory

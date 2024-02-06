@@ -1,4 +1,4 @@
-package kz.zhanarys.marvelexplorer.heroesList
+package kz.zhanarys.marvelexplorer
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import kz.zhanarys.domain.models.CharacterItemModel
-import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
 
-class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.HeroViewHolder>(
+class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdapter.CharacterViewHolder>(
     DiffCallbackObj
 ) {
     private var onItemClickListener: OnItemClickListener? = null
@@ -23,27 +22,27 @@ class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.Hero
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HeroViewHolder {
+    ): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return HeroViewHolder(inflater.inflate(R.layout.list_item_heroes, parent, false))
+        return CharacterViewHolder(inflater.inflate(R.layout.list_item_heroes, parent, false))
     }
 
-    override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         throw UnsupportedOperationException()
     }
 
     override fun onBindViewHolder(
-        holder: HeroViewHolder,
+        holder: CharacterViewHolder,
         position: Int,
         payloads: MutableList<Any>
     ) {
         holder.itemView.setOnClickListener {
-            onItemClickListener?.onItemClick((getItem(holder.adapterPosition)) as CharacterItemModel, holder.adapterPosition)
+            onItemClickListener?.onItemClick((getItem(holder.adapterPosition)) as CharacterItemModel)
         }
         holder.bind(getItem(position), onButtonLikeClickListener, payloads)
     }
 
-    inner class HeroViewHolder(private val view: View) : ViewHolder(view) {
+    inner class CharacterViewHolder(private val view: View) : ViewHolder(view) {
         fun bind(
             item: CharacterItemModel,
             onButtonLikeClickListener: OnButtonLikeClickListener?,
@@ -56,7 +55,6 @@ class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.Hero
             val name = view.findViewById<TextView>(R.id.characterItemName)
             val likeButton = view.findViewById<ImageButton>(R.id.characterItemLikeButton)
 
-            name.text = item.name
             image.load(imageUrl) {
                 crossfade(true)
                 placeholder(R.drawable.loading_placeholder)
@@ -79,6 +77,11 @@ class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.Hero
 
             if (changes.isEmpty()) {
                 name.text = item.name
+                likeButton.setImageResource(
+                    if (item.isFavorite) {
+                        R.drawable.shield_colored
+                    } else R.drawable.shiled_grey
+                )
                 image.load(imageUrl) {
                     placeholder(R.drawable.loading_placeholder)
                     crossfade(true)
@@ -93,6 +96,13 @@ class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.Hero
                     placeholder(R.drawable.loading_placeholder)
                     crossfade(true)
                 }
+            }
+            if (ChangeField.IS_FAVORITE in changes) {
+                likeButton.setImageResource(
+                    if (item.isFavorite) {
+                        R.drawable.shield_colored
+                    } else R.drawable.shiled_grey
+                )
             }
         }
     }
@@ -110,7 +120,7 @@ class HeroesListAdapter : ListAdapter<CharacterItemModel, HeroesListAdapter.Hero
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: CharacterItemModel, position: Int)
+        fun onItemClick(item: CharacterItemModel)
     }
 }
 
@@ -125,5 +135,5 @@ object DiffCallbackObj : DiffUtil.ItemCallback<CharacterItemModel>() {
 }
 
 enum class ChangeField {
-    NAME, IMAGE_URL, SHORT_INFO
+    NAME, IMAGE_URL, IS_FAVORITE
 }

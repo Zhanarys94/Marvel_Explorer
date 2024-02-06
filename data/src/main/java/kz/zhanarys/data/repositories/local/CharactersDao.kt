@@ -8,26 +8,26 @@ import androidx.room.Query
 @Dao
 interface CharactersDao {
     @Insert
-    fun insert(vararg character: CharacterEntity)
+    suspend fun insert(vararg character: CharacterEntity)
 
     @Insert
-    fun insertAll(characters: List<CharacterEntity>)
+    suspend fun insertAll(characters: List<CharacterEntity>)
 
     @Delete
-    fun delete(character: CharacterEntity)
+    suspend fun delete(character: CharacterEntity)
 
     @Query("SELECT * FROM characters")
-    fun getAll(): List<CharacterEntity>
+    suspend fun getAll(): List<CharacterEntity>
 
     @Query("SELECT * FROM characters WHERE id = :id")
-    fun getById(id: Long): CharacterEntity?
+    suspend fun getById(id: Int): CharacterEntity
 
     @Query("DELETE FROM characters WHERE id = :id")
-    fun deleteById(id: Long)
+    suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM characters WHERE name LIKE '%' || :name || '%'")
-    fun getByName(name: String): List<CharacterEntity>
+    suspend fun getByName(name: String): List<CharacterEntity>
 
     @Query("DELETE FROM characters")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

@@ -5,17 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kz.zhanarys.domain.useCases.UpdateMainListUseCase
 import kz.zhanarys.domain.ViewState
+import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
+import kz.zhanarys.domain.useCases.AddDeleteFavoritesUseCase
+import kz.zhanarys.domain.useCases.FavoritesListUseCase
 import kz.zhanarys.domain.useCases.SearchForCharacterUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val updateMainListUseCase: UpdateMainListUseCase,
-    private val searchForCharacterUseCase: SearchForCharacterUseCase
+    private val addDeleteFavoritesUseCase: AddDeleteFavoritesUseCase,
+    private val searchForCharacterUseCase: SearchForCharacterUseCase,
+    private val favoritesListUseCase: FavoritesListUseCase
 ) : ViewModel() {
 
     private var currentOffset = 0
@@ -34,6 +41,7 @@ class SharedViewModel @Inject constructor(
     val favoritesListLiveData: LiveData<List<CharacterItemModel>> = _favoritesListMutableLiveData
 
     fun updateMainListData() {
+        currentOffset = 0
         viewModelScope.launch {
             val data = updateMainListUseCase.getAllCharacters(currentOffset, limit)
             _charactersListMutableLiveData.value = data
@@ -49,23 +57,50 @@ class SharedViewModel @Inject constructor(
     }
 
     fun searchForCharacterByNameStartingWith(searchText: String) {
+        currentOffset = 0
         viewModelScope.launch {
             val data = updateMainListUseCase.getCharacterByNameStartingWith(searchText, currentOffset, limit)
             _charactersListMutableLiveData.value = data
         }
     }
 
-    fun searchForCharacterByName(searchText: String) {
+    fun addToFavorites(id: Int) {
         viewModelScope.launch {
-            val data = updateMainListUseCase.getCharacterByName(searchText, currentOffset, limit)
-            _charactersListMutableLiveData.value = data
+            addDeleteFavoritesUseCase.addToFav(id)
         }
     }
 
-    fun searchForCharacterById(id: Int) {
+    fun removeFromFavorites(id: Int) {
         viewModelScope.launch {
-            val data = searchForCharacterUseCase.getCharacterById(id, currentOffset, limit)
-            // TODO
+            addDeleteFavoritesUseCase.removeFromFav(id)
+        }
+    }
+
+    fun getFavoritesList() {
+        viewModelScope.launch {
+            val data = favoritesListUseCase.getFavoritesList()
+            _favoritesListMutableLiveData.value = data
+        }
+    }
+
+    suspend fun getCharacterById(id: Int): CharacterEntityModel {
+        return searchForCharacterUseCase.getCharacterById(id)
+    }
+
+    suspend fun getCharacterByIdFromDb(id: Int): CharacterEntityModel {
+        return viewModelScope.async {
+            favoritesListUseCase.getCharacterById(id)
+        }.await()
+    }
+
+    fun updateCharacterById(id: Int) {
+        viewModelScope.launch {
+            val list = _charactersListMutableLiveData.value!!.toMutableList()
+            val index = _charactersListMutableLiveData.value!!.indexOfFirst { it.id == id }
+            val character = _charactersListMutableLiveData.value!![index]
+            val updatedCharacter = character.copy(isFavorite = !character.isFavorite)
+            list[index] = updatedCharacter
+            _charactersListMutableLiveData.value = list.toList()
         }
     }
 

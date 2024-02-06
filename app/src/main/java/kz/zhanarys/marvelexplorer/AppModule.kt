@@ -11,9 +11,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kz.zhanarys.data.repositories.local.CharactersDao
-import kz.zhanarys.data.repositories.local.CharactersLocalDatabase
+import kz.zhanarys.data.repositories.local.CharactersLocalRepository
+import kz.zhanarys.data.repositories.local.LocalRepositoryDao
 import kz.zhanarys.data.repositories.network.MarvelApiRepository
 import kz.zhanarys.data.repositories.network.MarvelApiRest
+import kz.zhanarys.domain.interfaces.repositories.local.LocalDatabaseDao
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -30,22 +32,32 @@ abstract class NetworkModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
+abstract class DatabaseModule {
+    @Binds
+    @Singleton
+    abstract fun provideDatabase(database: LocalRepositoryDao): LocalDatabaseDao
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
 object AppModule {
     private const val BASE_URL = "https://gateway.marvel.com"
     private val contentType = "application/json".toMediaType()
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): CharactersLocalDatabase {
+    fun provideAppDatabase(@ApplicationContext context: Context): CharactersLocalRepository {
         return Room.databaseBuilder(
             context,
-            CharactersLocalDatabase::class.java,
-            "heroes.db"
-        ).build()
+            CharactersLocalRepository::class.java,
+            "characters_database.db"
+        )
+            .addMigrations(CharactersLocalRepository.migration1to2)
+            .build()
     }
 
     @Provides
-    fun provideHeroDao(database: CharactersLocalDatabase): CharactersDao {
+    fun provideCharactersDao(database: CharactersLocalRepository): CharactersDao {
         return database.characterDao()
     }
 

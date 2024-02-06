@@ -1,4 +1,4 @@
-package kz.zhanarys.marvelexplorer.heroesList
+package kz.zhanarys.marvelexplorer.charactersList
 
 import android.content.Context
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import dagger.hilt.android.AndroidEntryPoint
 import kz.zhanarys.domain.models.CharacterItemModel
+import kz.zhanarys.marvelexplorer.CharactersListAdapter
 import kz.zhanarys.marvelexplorer.SharedViewModel
 import kz.zhanarys.marvelexplorer.databinding.FragmentCharactersBinding
 
@@ -48,11 +49,11 @@ class CharactersListFragment: Fragment() {
         }
         val recyclerView = binding!!.listCharactersFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = HeroesListAdapter()
+        recyclerView.adapter = CharactersListAdapter()
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         sharedViewModel.charactersListLiveData.observe(viewLifecycleOwner) { charactersList ->
-            (recyclerView.adapter as HeroesListAdapter).submitList(charactersList.toList())
+            (recyclerView.adapter as CharactersListAdapter).submitList(charactersList.toList())
         }
 
         recyclerView.addOnScrollListener(object : OnScrollListener() {
@@ -70,19 +71,24 @@ class CharactersListFragment: Fragment() {
             }
         })
 
-        (recyclerView.adapter as HeroesListAdapter).apply {
+        (recyclerView.adapter as CharactersListAdapter).apply {
             setOnItemClickListener(
-                object : HeroesListAdapter.OnItemClickListener {
-                    override fun onItemClick(item: CharacterItemModel, position: Int) {
+                object : CharactersListAdapter.OnItemClickListener {
+                    override fun onItemClick(item: CharacterItemModel) {
                         // TODO
                     }
                 }
             )
 
             setOnButtonLikeClickListener(
-                object : HeroesListAdapter.OnButtonLikeClickListener {
+                object : CharactersListAdapter.OnButtonLikeClickListener {
                     override fun onLikeClick(item: CharacterItemModel) {
-                        // TODO
+                        sharedViewModel.updateCharacterById(item.id)
+                        if (item.isFavorite) {
+                            sharedViewModel.removeFromFavorites(item.id)
+                        } else {
+                            sharedViewModel.addToFavorites(item.id)
+                        }
                     }
                 }
             )
