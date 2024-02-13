@@ -44,6 +44,13 @@ class CharactersListFragment: Fragment() {
                 sharedViewModel.goToFavoritesList()
             }
         }
+        val swipeRefreshLayout = binding!!.listCharactersFragmentSwipeRefreshLayout.apply {
+            setOnRefreshListener {
+                sharedViewModel.updateMainListData()
+                searchBar.text = null
+                isRefreshing = false
+            }
+        }
         val recyclerView = binding!!.listCharactersFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = CharactersListAdapter()
@@ -52,6 +59,8 @@ class CharactersListFragment: Fragment() {
         sharedViewModel.charactersListLiveData.observe(viewLifecycleOwner) { charactersList ->
             (recyclerView.adapter as CharactersListAdapter).submitList(charactersList.toList())
         }
+
+
 
 
         recyclerView.addOnScrollListener(object : OnScrollListener() {

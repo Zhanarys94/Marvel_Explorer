@@ -88,6 +88,8 @@ class SharedViewModel @Inject constructor(
     fun removeFromFavorites(id: Int) {
         viewModelScope.launch {
             addDeleteFavoritesUseCase.removeFromFav(id)
+            val data = favoritesListUseCase.getFavoritesList()
+            _favoritesListMutableLiveData.value = data
         }
     }
 

@@ -20,13 +20,8 @@ import kz.zhanarys.marvelexplorer.CharactersListAdapter
 @AndroidEntryPoint
 class FavoritesListFragment: Fragment() {
     private var binding: FragmentFavoritesBinding? = null
-    /*private var interactionListener: FavoritesListFragmentInteractionListener? = null*/
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        /*interactionListener = context as FavoritesListFragmentInteractionListener*/
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,7 +59,7 @@ class FavoritesListFragment: Fragment() {
             setOnButtonLikeClickListener(
                 object : CharactersListAdapter.OnButtonLikeClickListener {
                     override fun onLikeClick(item: CharacterItemModel) {
-                        // TODO
+                        sharedViewModel.removeFromFavorites(item.id)
                     }
                 }
             )
@@ -96,12 +91,4 @@ class FavoritesListFragment: Fragment() {
         binding = null
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        /*interactionListener = null*/
-    }
-
-/*    interface FavoritesListFragmentInteractionListener {
-        fun onSearchBarChange(text: String)
-    }*/
 }
