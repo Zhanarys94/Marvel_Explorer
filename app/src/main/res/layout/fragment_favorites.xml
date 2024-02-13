@@ -6,13 +6,14 @@
 
     <EditText
         android:id="@+id/favoritesFragmentSearchBarEditText"
+        style="?attr/editTextStyle"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        style="@style/EditTextStyle_Marvel"
-        android:hint="Start typing name to search..."
-        android:inputType="text"
+        android:layout_weight="0"
         android:gravity="bottom"
-        android:layout_weight="0"/>
+        android:inputType="text"
+        android:hint="@string/hint_searchBar_charactersList"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesFragmentRecyclerView"

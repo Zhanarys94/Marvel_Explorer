@@ -12,6 +12,7 @@
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorError">@color/marvel_red_dark</item>
+        <item name="editTextStyle">@style/EditTextStyle_Marvel</item>
         <item name="textAppearanceHeadline6">@style/TextAppearance_Marvel.Headline6</item>
         <item name="textAppearanceHeadline5">@style/TextAppearance_Marvel.Headline5</item>
         <item name="textAppearanceBody1">@style/TextAppearance_Marvel.Body1</item>
