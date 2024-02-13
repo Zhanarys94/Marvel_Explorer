@@ -7,12 +7,12 @@
     <EditText
         android:id="@+id/favoritesFragmentSearchBarEditText"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="30dp"
         style="@style/EditTextStyle_Marvel"
         android:hint="Start typing name to search..."
         android:inputType="text"
-        android:layout_gravity="top"
-        android:layout_weight="0.07"/>
+        android:gravity="bottom"
+        android:layout_weight="0"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesFragmentRecyclerView"
@@ -34,6 +34,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:text="Data provided by Marvel. © 2014 Marvel"/>
+        android:text="@string/marvel_copyright_text"/>
 
 </LinearLayout>

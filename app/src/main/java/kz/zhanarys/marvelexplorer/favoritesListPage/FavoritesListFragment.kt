@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kz.zhanarys.domain.models.CharacterItemModel
@@ -19,12 +20,12 @@ import kz.zhanarys.marvelexplorer.CharactersListAdapter
 @AndroidEntryPoint
 class FavoritesListFragment: Fragment() {
     private var binding: FragmentFavoritesBinding? = null
-    private var interactionListener: FavoritesListFragmentInteractionListener? = null
+    /*private var interactionListener: FavoritesListFragmentInteractionListener? = null*/
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        interactionListener = context as FavoritesListFragmentInteractionListener
+        /*interactionListener = context as FavoritesListFragmentInteractionListener*/
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,9 +42,14 @@ class FavoritesListFragment: Fragment() {
         val recyclerView = binding!!.favoritesFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = CharactersListAdapter()
+        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
-        sharedViewModel.favoritesListLiveData.observe(viewLifecycleOwner) { savedList ->
-            (recyclerView.adapter as CharactersListAdapter).submitList(savedList.toList())
+        sharedViewModel.favoritesListLiveData.observe(viewLifecycleOwner) { _savedList ->
+            val savedList = _savedList.map {
+                it.isFavorite = true
+                it
+            }
+            (recyclerView.adapter as CharactersListAdapter).submitList(savedList)
         }
 
         (recyclerView.adapter as CharactersListAdapter).apply {
@@ -73,11 +79,8 @@ class FavoritesListFragment: Fragment() {
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-/*                        val searchText = p0.toString()
-                        if (searchText.length >= 3) {
-                            sharedViewModel
-                        }
-                        interactionListener!!.onSearchBarChange(p0.toString())*/
+                        val searchText = p0.toString()
+                        sharedViewModel.searchForCharacterByNameStartingWithInDb(searchText)
                     }
 
                     override fun afterTextChanged(p0: Editable?) {
@@ -95,10 +98,10 @@ class FavoritesListFragment: Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        interactionListener = null
+        /*interactionListener = null*/
     }
 
-    interface FavoritesListFragmentInteractionListener {
+/*    interface FavoritesListFragmentInteractionListener {
         fun onSearchBarChange(text: String)
-    }
+    }*/
 }

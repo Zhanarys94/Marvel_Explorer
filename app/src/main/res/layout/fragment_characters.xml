@@ -33,7 +33,7 @@
         android:layout_gravity="center"
         android:layout_weight="0.03"
         android:gravity="center"
-        android:text="Data provided by Marvel. © 2024 Marvel"
+        android:text="@string/marvel_copyright_text"
         android:textAppearance="?attr/textAppearanceCaption" />
 
     <Button
