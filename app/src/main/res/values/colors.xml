@@ -4,7 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="marvel_red">#C90000</color>
     <color name="marvel_red_dark">#8F0000</color>
-    <color name="naples_yellow">#F9DC5C</color>
-    <color name="marvel_blue">#0057B5</color>
-    <color name="marvel_blue_dark">#003C7D</color>
+    <color name="marvel_text_dark_grey">#212121</color>
+    <color name="marvel_blue">#87C1FF</color>
+    <color name="marvel_blue_dark">#5BAAFF</color>
+    <color name="marvel_background">#F5F5F5</color>
+    <color name="marvel_onSurface_card">#FFFFFF</color>
 </resources>

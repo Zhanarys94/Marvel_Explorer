@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/charactersFragment"
-        android:name="kz.zhanarys.marvelexplorer.charactersList.CharactersListFragment"
+        android:name="kz.zhanarys.marvelexplorer.fragments.CharactersListFragment"
         android:label="Characters list">
 
         <action
@@ -14,19 +14,30 @@
             app:destination="@id/favoritesFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_charactersFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
 
     </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="kz.zhanarys.marvelexplorer.favoritesListPage.FavoritesListFragment"
+        android:name="kz.zhanarys.marvelexplorer.fragments.FavoritesListFragment"
         android:label="Favorites list">
 
         <action
-            android:id="@+id/action_backToCharactersListFragment"
-            app:destination="@id/charactersFragment"
-            app:popUpTo="@id/charactersFragment"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_favoritesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="kz.zhanarys.marvelexplorer.fragments.DetailsFragment"
+        android:label="DetailsFragment" >
     </fragment>
 
 </navigation>

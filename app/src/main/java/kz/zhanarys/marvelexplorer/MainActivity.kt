@@ -11,6 +11,8 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kz.zhanarys.data.repositories.local.CharactersLocalRepository
 import kz.zhanarys.marvelexplorer.databinding.ActivityMainBinding
+import kz.zhanarys.marvelexplorer.viewModel.SharedViewModel
+import kz.zhanarys.marvelexplorer.viewModel.SharedViewModelFactory
 import javax.inject.Inject
 
 @AndroidEntryPoint

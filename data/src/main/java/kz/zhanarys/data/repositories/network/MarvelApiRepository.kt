@@ -2,9 +2,13 @@ package kz.zhanarys.data.repositories.network
 
 import kz.zhanarys.data.repositories.network.configurations.Timestamp
 import kz.zhanarys.data.repositories.network.configurations.Md5
+import kz.zhanarys.data.repositories.network.dto.toCharacterEntityModel
+import kz.zhanarys.data.repositories.network.dto.toCharacterItemModel
+import kz.zhanarys.data.repositories.network.dto.toComicsItemModel
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
 import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
+import kz.zhanarys.domain.models.ComicItemModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,6 +68,18 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
         retrofit.getCharacterByName(name, formattedTimestamp, PUBLIC_KEY, hash, offset, limit).let { response ->
             if (response.code == 200) {
                 return response.data.results.map { it.toCharacterItemModel() }
+            } else {
+                throw MarvelApiException("Error ${response.code} ${response.status}")
+            }
+        }
+    }
+
+    override suspend fun getCharacterComics(id: Int, offset: Int, limit: Int): List<ComicItemModel> {
+        val formattedTimestamp = timestamp.generateFormattedTimestamp(timestamp.generateTimestamp())
+        val hash = md5.md5(formattedTimestamp + PRIVATE_KEY + PUBLIC_KEY)
+        retrofit.getCharacterComics(id, formattedTimestamp, PUBLIC_KEY, hash, offset, limit).let { response ->
+            if (response.code == 200) {
+                return response.data.results.map { it.toComicsItemModel() }
             } else {
                 throw MarvelApiException("Error ${response.code} ${response.status}")
             }

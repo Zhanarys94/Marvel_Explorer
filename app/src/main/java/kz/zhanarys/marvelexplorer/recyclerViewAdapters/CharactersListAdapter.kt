@@ -1,5 +1,7 @@
-package kz.zhanarys.marvelexplorer
+package kz.zhanarys.marvelexplorer.recyclerViewAdapters
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import kz.zhanarys.domain.models.CharacterItemModel
+import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
 
 class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdapter.CharacterViewHolder>(
@@ -24,7 +27,7 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
         viewType: Int
     ): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return CharacterViewHolder(inflater.inflate(R.layout.list_item_heroes, parent, false))
+        return CharacterViewHolder(inflater.inflate(R.layout.list_item_character, parent, false))
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
@@ -40,6 +43,7 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
             onItemClickListener?.onItemClick((getItem(holder.adapterPosition)) as CharacterItemModel)
         }
         holder.bind(getItem(position), onButtonLikeClickListener, payloads)
+        setScaleAnimation(holder.itemView)
     }
 
     inner class CharacterViewHolder(private val view: View) : ViewHolder(view) {
@@ -105,6 +109,17 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
                 )
             }
         }
+    }
+
+    private fun setScaleAnimation(view: View) {
+        val scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.6f, 1f)
+        val scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.6f, 1f)
+        scaleX.duration = 500
+        scaleY.duration = 500
+
+        val scaleSet = AnimatorSet()
+        scaleSet.play(scaleX).with(scaleY)
+        scaleSet.start()
     }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {

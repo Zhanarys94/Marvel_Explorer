@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Marvel Explorer</string>
+    <string name="character_item">Character item</string>
     <string name="character_portrait">Character portrait</string>
-    <string name="add_this_character_to_favorites">description_item_saveButton</string>
+    <string name="description_item_saveButton">Add this character to favorites</string>
     <string name="marvel_copyright_text">Data provided by Marvel. © 2024 Marvel</string>
-    <string name="hint_searchBar_charactersList">Start typing name to search...</string>
+    <string name="hint_searchBar_charactersList">Start typing name to search…</string>
     <string name="text_buttonToFavorites">Favorites</string>
+    <string name="comics_image">Comics image</string>
+    <string name="header_comics_list">Comics List</string>
 </resources>

@@ -18,7 +18,7 @@ class UpdateMainListUseCase @Inject constructor(
                 character
             }
         }
-        return updatedData
+        return updatedData.sortedBy { it.name }
     }
 
 }

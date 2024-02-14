@@ -1,4 +1,4 @@
-package kz.zhanarys.marvelexplorer
+package kz.zhanarys.marvelexplorer.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,10 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kz.zhanarys.domain.useCases.UpdateMainListUseCase
-import kz.zhanarys.domain.ViewState
 import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
+import kz.zhanarys.domain.models.ComicItemModel
 import kz.zhanarys.domain.useCases.AddDeleteFavoritesUseCase
+import kz.zhanarys.domain.useCases.CharacterDetailsUseCase
 import kz.zhanarys.domain.useCases.FavoritesListUseCase
 import kz.zhanarys.domain.useCases.SearchForCharacterUseCase
 import javax.inject.Inject
@@ -21,23 +22,27 @@ class SharedViewModel @Inject constructor(
     private val updateMainListUseCase: UpdateMainListUseCase,
     private val addDeleteFavoritesUseCase: AddDeleteFavoritesUseCase,
     private val searchForCharacterUseCase: SearchForCharacterUseCase,
-    private val favoritesListUseCase: FavoritesListUseCase
+    private val favoritesListUseCase: FavoritesListUseCase,
+    private val characterDetailsUseCase: CharacterDetailsUseCase
 ) : ViewModel() {
 
-    private var limit = 20
     private var currentOffset = 0
+    private var limit = 20
 
-    private val _isLoadingMutableLiveData = MutableLiveData(false)
-    val isLoadingLiveData: LiveData<Boolean> = _isLoadingMutableLiveData
+    private var currentOffsetComics = 0
+    private var limitComics = 20
 
-    private val _currentScreenMutableLiveData = MutableLiveData(ViewState.MAIN)
-    val currentScreenLiveData: LiveData<ViewState> = _currentScreenMutableLiveData
+    private val _currentCharacterMutableLiveData = MutableLiveData<CharacterEntityModel>()
+    val currentCharacterLiveData: LiveData<CharacterEntityModel> = _currentCharacterMutableLiveData
 
     private val _charactersListMutableLiveData = MutableLiveData<List<CharacterItemModel>>()
     val charactersListLiveData: LiveData<List<CharacterItemModel>> = _charactersListMutableLiveData
 
     private val _favoritesListMutableLiveData = MutableLiveData<List<CharacterItemModel>>()
     val favoritesListLiveData: LiveData<List<CharacterItemModel>> = _favoritesListMutableLiveData
+
+    private val _comicsListMutableLiveData = MutableLiveData<List<ComicItemModel>>()
+    val comicsListLiveData: LiveData<List<ComicItemModel>> = _comicsListMutableLiveData
 
     init {
         currentOffset = 0
@@ -82,15 +87,20 @@ class SharedViewModel @Inject constructor(
     fun addToFavorites(id: Int) {
         viewModelScope.launch {
             addDeleteFavoritesUseCase.addToFav(id)
+            updateFavorites()
         }
     }
 
     fun removeFromFavorites(id: Int) {
         viewModelScope.launch {
             addDeleteFavoritesUseCase.removeFromFav(id)
-            val data = favoritesListUseCase.getFavoritesList()
-            _favoritesListMutableLiveData.value = data
+            updateFavorites()
         }
+    }
+
+    private suspend fun updateFavorites() {
+        val data = favoritesListUseCase.getFavoritesList()
+        _favoritesListMutableLiveData.postValue(data)
     }
 
     fun goToFavoritesList() {
@@ -98,7 +108,6 @@ class SharedViewModel @Inject constructor(
             val data = favoritesListUseCase.getFavoritesList()
             _favoritesListMutableLiveData.value = data
         }
-        _currentScreenMutableLiveData.value = ViewState.FAVORITES
     }
 
     fun searchForCharacterByNameStartingWithInDb(searchText: String) {
@@ -119,8 +128,21 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    suspend fun getCharacterById(id: Int): CharacterEntityModel {
-        return searchForCharacterUseCase.getCharacterById(id)
+    fun getCharacterDetails(character: CharacterItemModel) {
+        currentOffsetComics = 0
+        viewModelScope.launch {
+            _currentCharacterMutableLiveData.value = characterDetailsUseCase.getCharacterDetails(character)
+            val comics = characterDetailsUseCase.getCharacterComics(character.id, currentOffsetComics, limitComics)
+            _comicsListMutableLiveData.value = comics
+        }
+    }
+
+    fun fetchMoreComics() {
+        viewModelScope.launch {
+            currentOffsetComics += limitComics
+            val data = characterDetailsUseCase.getCharacterComics(currentCharacterLiveData.value!!.id, currentOffsetComics, limitComics)
+            _comicsListMutableLiveData.value = _comicsListMutableLiveData.value.orEmpty() + data
+        }
     }
 
     suspend fun getCharacterByIdFromDb(id: Int): CharacterEntityModel {

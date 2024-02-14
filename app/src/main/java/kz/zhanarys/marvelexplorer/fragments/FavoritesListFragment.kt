@@ -1,6 +1,5 @@
-package kz.zhanarys.marvelexplorer.favoritesListPage
+package kz.zhanarys.marvelexplorer.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,13 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kz.zhanarys.domain.models.CharacterItemModel
-import kz.zhanarys.marvelexplorer.SharedViewModel
+import kz.zhanarys.marvelexplorer.R
+import kz.zhanarys.marvelexplorer.viewModel.SharedViewModel
 import kz.zhanarys.marvelexplorer.databinding.FragmentFavoritesBinding
-import kz.zhanarys.marvelexplorer.CharactersListAdapter
+import kz.zhanarys.marvelexplorer.recyclerViewAdapters.CharactersListAdapter
 
 @AndroidEntryPoint
 class FavoritesListFragment: Fragment() {
@@ -33,11 +34,11 @@ class FavoritesListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val navController = findNavController()
         val searchBar = binding!!.favoritesFragmentSearchBarEditText
         val recyclerView = binding!!.favoritesFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = CharactersListAdapter()
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         sharedViewModel.favoritesListLiveData.observe(viewLifecycleOwner) { _savedList ->
             val savedList = _savedList.map {
@@ -51,7 +52,8 @@ class FavoritesListFragment: Fragment() {
             setOnItemClickListener(
                 object : CharactersListAdapter.OnItemClickListener {
                     override fun onItemClick(item: CharacterItemModel) {
-                        // TODO
+                        sharedViewModel.getCharacterDetails(item)
+                        navController.navigate(R.id.action_favoritesFragment_to_detailsFragment)
                     }
                 }
             )

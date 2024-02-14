@@ -1,5 +1,8 @@
 package kz.zhanarys.data.repositories.network
 
+import kz.zhanarys.data.repositories.network.dto.CharacterDataWrapperDto
+import kz.zhanarys.data.repositories.network.dto.ComicDataWrapperDto
+import kz.zhanarys.data.repositories.network.dto.ComicsDataContainerDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -47,4 +50,14 @@ interface MarvelApiRest {
         @Query("offset") offset: Int,
         @Query("limit") limit: Int
     ): CharacterDataWrapperDto
+
+    @GET("v1/public/characters/{characterId}/comics")
+    suspend fun getCharacterComics(
+        @Path("characterId") characterId: Int,
+        @Query("ts") timestamp: String,
+        @Query("apikey") publicKey: String,
+        @Query("hash") hash: String,
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int
+    ): ComicDataWrapperDto
 }

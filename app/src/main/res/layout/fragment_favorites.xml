@@ -6,14 +6,17 @@
 
     <EditText
         android:id="@+id/favoritesFragmentSearchBarEditText"
-        style="?attr/editTextStyle"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_weight="0"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:textAppearance="?attr/textAppearanceBody2"
         android:gravity="bottom"
-        android:inputType="text"
         android:hint="@string/hint_searchBar_charactersList"
-        />
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="text" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesFragmentRecyclerView"
