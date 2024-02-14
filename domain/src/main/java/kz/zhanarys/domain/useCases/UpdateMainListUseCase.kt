@@ -18,15 +18,7 @@ class UpdateMainListUseCase @Inject constructor(
                 character
             }
         }
-        return updatedData
-    }
-
-    suspend fun getCharacterByNameStartingWith(chars: String, offset: Int, limit: Int): List<CharacterItemModel> {
-        return apiRepository.getCharacterByNameStartingWith(chars, offset, limit)
-    }
-
-    suspend fun getCharacterByName(name: String, offset: Int, limit: Int): List<CharacterItemModel> {
-        return apiRepository.getCharacterByName(name, offset, limit)
+        return updatedData.sortedBy { it.name }
     }
 
 }

@@ -18,7 +18,7 @@ data class CharacterEntity(
 fun CharacterEntity.toCharacterItemModel() = CharacterItemModel(
     id,
     name,
-    imageUrl,
+    imageUrl, 
     imageExtension,
     shortInfo,
     true

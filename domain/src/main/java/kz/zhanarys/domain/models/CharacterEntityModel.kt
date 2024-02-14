@@ -6,5 +6,5 @@ class CharacterEntityModel(
     override val imageUrl: String,
     override val imageExtension: String,
     override val shortInfo: String,
-    val url: String
+    var url: String
 ) : Character

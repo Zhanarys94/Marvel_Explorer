@@ -12,7 +12,6 @@ interface LocalDatabaseDao {
 
     suspend fun delete(character: CharacterEntityModel)
 
-
     suspend fun getAll(): List<CharacterItemModel>
 
     suspend fun getById(id: Int): CharacterEntityModel

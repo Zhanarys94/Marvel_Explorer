@@ -1,8 +1,7 @@
-package kz.zhanarys.data.repositories.network
+package kz.zhanarys.data.repositories.network.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kz.zhanarys.data.repositories.local.CharacterEntity
 import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
 

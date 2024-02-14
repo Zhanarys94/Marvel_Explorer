@@ -8,3 +8,14 @@ data class CharacterItemModel(
     override val shortInfo: String,
     var isFavorite: Boolean
 ) : Character
+
+fun CharacterItemModel.toCharacterEntityModel(): CharacterEntityModel {
+    return CharacterEntityModel(
+        id = id,
+        name = name,
+        imageUrl = imageUrl,
+        imageExtension = imageExtension,
+        shortInfo = shortInfo,
+        url = ""
+    )
+}
