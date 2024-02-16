@@ -8,21 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.recyclerViewAdapters.CharactersListAdapter
 import kz.zhanarys.marvelexplorer.R
 import kz.zhanarys.marvelexplorer.viewModel.SharedViewModel
 import kz.zhanarys.marvelexplorer.databinding.FragmentCharactersBinding
-import kotlin.coroutines.coroutineContext
 
 @AndroidEntryPoint
 class CharactersListFragment: Fragment() {

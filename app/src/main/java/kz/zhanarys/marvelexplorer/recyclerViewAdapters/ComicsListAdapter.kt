@@ -39,7 +39,7 @@ class ComicsListAdapter : ListAdapter<ComicItemModel, ComicsListAdapter.ComicsVi
 
     inner class ComicsViewHolder(private val view: View) : ViewHolder(view) {
         fun bind(item: ComicItemModel, payloads: MutableList<Any>) {
-            val imageVariant = "/portrait_small"
+            val imageVariant = "/portrait_xlarge"
             val imageUrl = item.imageUrl + imageVariant + item.imageExtension
 
             val image = view.findViewById<ImageView>(R.id.comicsItemImage)
@@ -53,7 +53,7 @@ class ComicsListAdapter : ListAdapter<ComicItemModel, ComicsListAdapter.ComicsVi
             image.load(imageUrl) {
                 crossfade(true)
                 diskCachePolicy(CachePolicy.DISABLED)
-                placeholder(R.drawable.loading_placeholder)
+                placeholder(R.drawable.ic_loading_placeholder)
             }
 
             val changes = if (payloads.isEmpty()) {
@@ -69,7 +69,7 @@ class ComicsListAdapter : ListAdapter<ComicItemModel, ComicsListAdapter.ComicsVi
             if (changes.isEmpty()) {
                 title.text = item.title
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
                 format.text = item.format
@@ -80,7 +80,7 @@ class ComicsListAdapter : ListAdapter<ComicItemModel, ComicsListAdapter.ComicsVi
             }
             if (ChangeFieldComics.IMAGE_URL in changes) {
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
             }

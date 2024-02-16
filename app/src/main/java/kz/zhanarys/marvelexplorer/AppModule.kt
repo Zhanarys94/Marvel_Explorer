@@ -17,7 +17,6 @@ import kz.zhanarys.data.repositories.network.MarvelApiRepository
 import kz.zhanarys.data.repositories.network.MarvelApiRest
 import kz.zhanarys.domain.interfaces.repositories.local.LocalDatabaseDao
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
-import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -42,7 +41,7 @@ abstract class DatabaseModule {
 @InstallIn(SingletonComponent::class)
 object AppModule {
     private const val BASE_URL = "https://gateway.marvel.com"
-    private val contentType = "application/json".toMediaType()
+    private const val DATABASE_NAME = "characters_database.db"
 
     @Provides
     @Singleton
@@ -50,7 +49,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             CharactersLocalRepository::class.java,
-            "characters_database.db"
+            DATABASE_NAME
         )
             .addMigrations(CharactersLocalRepository.migration1to2)
             .build()

@@ -8,9 +8,6 @@ import kz.zhanarys.domain.models.toCharacterEntityModel
 import javax.inject.Inject
 
 class CharacterDetailsUseCase @Inject constructor(private val apiRepository: ApiRepository) {
-    suspend fun getCharacterById(id: Int): CharacterEntityModel {
-        return apiRepository.getCharacterById(id)
-    }
 
     fun getCharacterDetails(character: CharacterItemModel): CharacterEntityModel {
         return character.toCharacterEntityModel()

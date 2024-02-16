@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
+import coil.request.CachePolicy
 import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
@@ -60,11 +61,12 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
             val likeButton = view.findViewById<ImageButton>(R.id.characterItemLikeButton)
 
             image.load(imageUrl) {
+                diskCachePolicy(CachePolicy.ENABLED)
                 crossfade(true)
-                placeholder(R.drawable.loading_placeholder)
+                placeholder(R.drawable.ic_loading_placeholder)
             }
 
-            likeButton.setImageResource(R.drawable.shiled_grey)
+            likeButton.setImageResource(R.drawable.ic_shiled_grey)
             likeButton.setOnClickListener {
                 onButtonLikeClickListener?.onLikeClick(item)
             }
@@ -83,11 +85,12 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
                 name.text = item.name
                 likeButton.setImageResource(
                     if (item.isFavorite) {
-                        R.drawable.shield_colored
-                    } else R.drawable.shiled_grey
+                        R.drawable.ic_shield_colored
+                    } else R.drawable.ic_shiled_grey
                 )
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
             }
@@ -97,15 +100,16 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
             }
             if (ChangeField.IMAGE_URL in changes) {
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
             }
             if (ChangeField.IS_FAVORITE in changes) {
                 likeButton.setImageResource(
                     if (item.isFavorite) {
-                        R.drawable.shield_colored
-                    } else R.drawable.shiled_grey
+                        R.drawable.ic_shield_colored
+                    } else R.drawable.ic_shiled_grey
                 )
             }
         }

@@ -144,10 +144,4 @@ class SharedViewModel @Inject constructor(
             _comicsListMutableLiveData.value = _comicsListMutableLiveData.value.orEmpty() + data
         }
     }
-
-    suspend fun getCharacterByIdFromDb(id: Int): CharacterEntityModel {
-        return viewModelScope.async {
-            favoritesListUseCase.getCharacterById(id)
-        }.await()
-    }
 }

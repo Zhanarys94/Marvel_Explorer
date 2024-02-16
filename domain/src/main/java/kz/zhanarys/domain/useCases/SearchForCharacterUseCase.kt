@@ -2,7 +2,6 @@ package kz.zhanarys.domain.useCases
 
 import kz.zhanarys.domain.interfaces.repositories.local.LocalDatabaseDao
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
-import kz.zhanarys.domain.models.CharacterEntityModel
 import kz.zhanarys.domain.models.CharacterItemModel
 import javax.inject.Inject
 

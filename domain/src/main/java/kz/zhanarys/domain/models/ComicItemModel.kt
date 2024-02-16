@@ -6,5 +6,4 @@ data class ComicItemModel(
     val format: String,
     val imageUrl: String,
     val imageExtension: String,
-) {
-}
+)

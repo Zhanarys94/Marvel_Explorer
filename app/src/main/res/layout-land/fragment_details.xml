@@ -7,75 +7,65 @@
 
     <ImageView
         android:id="@+id/characterDetailsImageView"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:contentDescription="@string/character_portrait"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/characterDetailsNameTextView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="24dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
-        android:textAppearance="?attr/textAppearanceHeadline5"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/characterDetailsImageView"
         tools:text="TextView" />
 
     <TextView
         android:id="@+id/characterDetailsDescriptionTextView"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="start"
         android:textAppearance="?attr/textAppearanceBody1"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/characterDetailsNameTextView"
         tools:text="TextView" />
 
     <TextView
         android:id="@+id/characterDetailsRecyclerViewHeaderTextView"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="56dp"
         android:gravity="center_horizontal"
         android:text="@string/header_comics_list"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/characterDetailsRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/characterDetailsDescriptionTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/characterDetailsRecyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="17dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/characterDetailsImageView"
         app:layout_constraintTop_toBottomOf="@+id/characterDetailsRecyclerViewHeaderTextView" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
