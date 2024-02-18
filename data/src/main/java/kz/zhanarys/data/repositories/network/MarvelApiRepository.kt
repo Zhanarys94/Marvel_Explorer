@@ -20,7 +20,8 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
 
     private val timestamp = Timestamp
     private val md5 = Md5()
-    override suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel> {
+
+    override suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel>? {
         val formattedTimestamp = timestamp.generateFormattedTimestamp(timestamp.generateTimestamp())
         val hash = md5.md5(formattedTimestamp + PRIVATE_KEY + PUBLIC_KEY)
         return runCatching {
@@ -30,9 +31,7 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
             } else {
                 throw MarvelApiException("Error ${response.code} ${response.status}")
             }
-        }.getOrElse {
-            throw MarvelApiException("Error during network request ${it.localizedMessage} ${it.cause} ${it.message}")
-        }
+        }.getOrNull()
     }
 
     override suspend fun getCharacterById(id: Int): CharacterEntityModel {
@@ -51,13 +50,13 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
         val formattedTimestamp = timestamp.generateFormattedTimestamp(timestamp.generateTimestamp())
         val hash = md5.md5(formattedTimestamp + PRIVATE_KEY + PUBLIC_KEY)
         if (chars.isEmpty()) {
-            return getAllCharacters(offset, limit)
+            return getAllCharacters(offset, limit) ?: emptyList()
         }
         retrofit.getCharacterByNameStartingWith(chars, formattedTimestamp, PUBLIC_KEY, hash, offset, limit).let { response ->
             if (response.code == 200) {
                 return response.data.results.map { it.toCharacterItemModel() }
             } else {
-                throw MarvelApiException("Error ${response.code} ${response.status}")
+                return emptyList()
             }
         }
     }
@@ -69,20 +68,21 @@ class MarvelApiRepository @Inject constructor(private val retrofit: MarvelApiRes
             if (response.code == 200) {
                 return response.data.results.map { it.toCharacterItemModel() }
             } else {
-                throw MarvelApiException("Error ${response.code} ${response.status}")
+                return emptyList()
             }
         }
     }
 
-    override suspend fun getCharacterComics(id: Int, offset: Int, limit: Int): List<ComicItemModel> {
+    override suspend fun getCharacterComics(id: Int, offset: Int, limit: Int): List<ComicItemModel>? {
         val formattedTimestamp = timestamp.generateFormattedTimestamp(timestamp.generateTimestamp())
         val hash = md5.md5(formattedTimestamp + PRIVATE_KEY + PUBLIC_KEY)
-        retrofit.getCharacterComics(id, formattedTimestamp, PUBLIC_KEY, hash, offset, limit).let { response ->
+        return runCatching {
+            val response = retrofit.getCharacterComics(id, formattedTimestamp, PUBLIC_KEY, hash, offset, limit)
             if (response.code == 200) {
-                return response.data.results.map { it.toComicsItemModel() }
+                response.data.results.map { it.toComicsItemModel() }
             } else {
-                throw MarvelApiException("Error ${response.code} ${response.status}")
+                emptyList()
             }
-        }
+        }.getOrNull()
     }
 }

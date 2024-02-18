@@ -11,6 +11,9 @@ class SearchForCharacterUseCase @Inject constructor(
 ) {
     suspend fun getCharacterByNameStartingWith(chars: String, offset: Int, limit: Int): List<CharacterItemModel> {
         val data = apiRepository.getCharacterByNameStartingWith(chars, offset, limit)
+        if (data.isEmpty()) {
+            return emptyList()
+        }
         val localData = localDatabaseDao.getAll()
         val updatedData = data.map { character ->
             if (localData.any { it.id == character.id } ) {
@@ -19,7 +22,7 @@ class SearchForCharacterUseCase @Inject constructor(
                 character
             }
         }
-        return updatedData.sortedBy { it.name }
+        return updatedData
     }
 
     suspend fun getCharacterByNameStartingWithFromLocalDB(chars: String): List<CharacterItemModel> {

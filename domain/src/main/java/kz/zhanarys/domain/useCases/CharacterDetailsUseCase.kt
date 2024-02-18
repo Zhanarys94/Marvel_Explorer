@@ -14,6 +14,6 @@ class CharacterDetailsUseCase @Inject constructor(private val apiRepository: Api
     }
 
     suspend fun getCharacterComics(characterId: Int, offset: Int, limit: Int): List<ComicItemModel> {
-        return apiRepository.getCharacterComics(characterId, offset, limit)
+        return apiRepository.getCharacterComics(characterId, offset, limit) ?: emptyList()
     }
 }

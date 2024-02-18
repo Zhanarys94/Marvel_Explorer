@@ -5,7 +5,7 @@ import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.domain.models.ComicItemModel
 
 interface ApiRepository {
-    suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel>
+    suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel>?
 
     suspend fun getCharacterById(id: Int): CharacterEntityModel
 
@@ -13,5 +13,5 @@ interface ApiRepository {
 
     suspend fun getCharacterByName(name: String, offset: Int, limit: Int): List<CharacterItemModel>
 
-    suspend fun getCharacterComics(id: Int, offset: Int, limit: Int): List<ComicItemModel>
+    suspend fun getCharacterComics(id: Int, offset: Int, limit: Int): List<ComicItemModel>?
 }

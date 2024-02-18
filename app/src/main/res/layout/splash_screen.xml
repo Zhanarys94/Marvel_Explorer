@@ -5,8 +5,8 @@
     android:theme="@style/MarvelExplorer">
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_shield_colored"
         android:contentDescription="@string/description_splashScreen" />

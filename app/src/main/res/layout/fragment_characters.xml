@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/listCharactersFragmentSearchBarEditText"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_weight="0.01"
         android:paddingTop="5dp"
         android:paddingBottom="10dp"
         android:textAppearance="?attr/textAppearanceBody2"
@@ -17,6 +17,15 @@
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:inputType="text"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/listCharactersFragmentProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorSecondary" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/listCharactersFragmentSwipeRefreshLayout"
