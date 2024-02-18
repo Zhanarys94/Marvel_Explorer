@@ -25,5 +25,6 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="0.99"
-        app:navGraph="@navigation/nav_graph"/>
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true"/>
 </LinearLayout>
