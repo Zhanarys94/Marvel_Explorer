@@ -8,20 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kz.zhanarys.domain.interfaces.repositories.local.ImageHandler
 import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.R
 import kz.zhanarys.marvelexplorer.viewModel.SharedViewModel
 import kz.zhanarys.marvelexplorer.databinding.FragmentFavoritesBinding
 import kz.zhanarys.marvelexplorer.recyclerViewAdapters.CharactersListAdapter
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FavoritesListFragment: Fragment() {
     private var binding: FragmentFavoritesBinding? = null
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    @Inject lateinit var imageHandler: ImageHandler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +41,7 @@ class FavoritesListFragment: Fragment() {
         val searchBar = binding!!.favoritesFragmentSearchBarEditText
         val recyclerView = binding!!.favoritesFragmentRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = CharactersListAdapter()
+        recyclerView.adapter = CharactersListAdapter(imageHandler, lifecycleScope)
 
         sharedViewModel.favoritesListLiveData.observe(viewLifecycleOwner) { _savedList ->
             val savedList = _savedList.map {
@@ -77,7 +80,9 @@ class FavoritesListFragment: Fragment() {
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         val searchText = p0.toString()
-                        sharedViewModel.searchForCharacterByNameStartingWithInDb(searchText)
+                        if (searchText.isNotEmpty()) {
+                            sharedViewModel.searchForCharacterByNameStartingWithInDb(searchText)
+                        }
                     }
 
                     override fun afterTextChanged(p0: Editable?) {

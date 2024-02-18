@@ -8,8 +8,12 @@ import javax.inject.Inject
 class UpdateMainListUseCase @Inject constructor(
     private val apiRepository: ApiRepository,
     private val localDatabaseDao: LocalDatabaseDao) {
-    suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel> {
-        val data = apiRepository.getAllCharacters(offset, limit)
+
+    suspend fun getAllCharacters(offset: Int, limit: Int): List<CharacterItemModel>? {
+        val data = apiRepository.getAllCharacters(offset, limit) ?: return null
+        if (data.isEmpty()) {
+            return emptyList()
+        }
         val localData = localDatabaseDao.getAll()
         val updatedData = data.map { character ->
             if (localData.any { it.id == character.id } ) {
@@ -18,7 +22,26 @@ class UpdateMainListUseCase @Inject constructor(
                 character
             }
         }
-        return updatedData.sortedBy { it.name }
+        return updatedData
+    }
+
+    suspend fun getMoreCharacters(
+        localData: List<CharacterItemModel>,
+        offset: Int,
+        limit: Int
+    ): List<CharacterItemModel>? {
+        val data = apiRepository.getAllCharacters(offset, limit) ?: return null
+        if (data.isEmpty()) {
+            return emptyList()
+        }
+        val updatedData = data.map { character ->
+            if (localData.any { it.id == character.id } ) {
+                character.copy(isFavorite = true)
+            } else {
+                character
+            }
+        }
+        return updatedData
     }
 
 }

@@ -9,7 +9,6 @@ abstract class CharactersLocalRepository : RoomDatabase() {
     abstract fun characterDao(): CharactersDao
 
     companion object {
-        private const val DATABASE_NAME = "characters_database.db"
 
         val migration1to2 = object : androidx.room.migration.Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {

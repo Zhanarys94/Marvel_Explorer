@@ -1,7 +1,9 @@
 package kz.zhanarys.marvelexplorer
 
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.room.Room
+import coil.ImageLoader
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds
@@ -12,16 +14,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kz.zhanarys.data.repositories.local.CharactersDao
 import kz.zhanarys.data.repositories.local.CharactersLocalRepository
+import kz.zhanarys.data.repositories.local.LocalCacheImageHandler
 import kz.zhanarys.data.repositories.local.LocalRepositoryDao
 import kz.zhanarys.data.repositories.network.MarvelApiRepository
 import kz.zhanarys.data.repositories.network.MarvelApiRest
+import kz.zhanarys.domain.interfaces.repositories.local.ImageHandler
 import kz.zhanarys.domain.interfaces.repositories.local.LocalDatabaseDao
 import kz.zhanarys.domain.interfaces.repositories.remote.ApiRepository
-import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NetworkModule {
@@ -30,6 +34,7 @@ abstract class NetworkModule {
     abstract fun provideApiRepository(apiRepository: MarvelApiRepository): ApiRepository
 }
 
+@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DatabaseModule {
@@ -38,11 +43,20 @@ abstract class DatabaseModule {
     abstract fun provideDatabase(database: LocalRepositoryDao): LocalDatabaseDao
 }
 
+@Suppress("unused")
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class ImageHandlerModule {
+    @Binds
+    @Singleton
+    abstract fun provideImageHandler(imageHandler: LocalCacheImageHandler): ImageHandler
+}
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
     private const val BASE_URL = "https://gateway.marvel.com"
-    private val contentType = "application/json".toMediaType()
+    private const val DATABASE_NAME = "characters_database.db"
 
     @Provides
     @Singleton
@@ -50,7 +64,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             CharactersLocalRepository::class.java,
-            "characters_database.db"
+            DATABASE_NAME
         )
             .addMigrations(CharactersLocalRepository.migration1to2)
             .build()
@@ -82,5 +96,25 @@ object AppModule {
     @Singleton
     fun provideMarvelRetrofitService(retrofit: Retrofit): MarvelApiRest {
         return retrofit.create(MarvelApiRest::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageHandler(
+        @ApplicationContext context: Context,
+        imageLoader: ImageLoader): LocalCacheImageHandler {
+        return LocalCacheImageHandler(context, imageLoader)
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
+        return ImageLoader.Builder(context).build()
     }
 }

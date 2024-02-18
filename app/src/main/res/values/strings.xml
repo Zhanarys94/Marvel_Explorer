@@ -8,4 +8,7 @@
     <string name="text_buttonToFavorites">Favorites</string>
     <string name="comics_image">Comics image</string>
     <string name="header_comics_list">Comics List</string>
+    <string name="description_comic_item">Comic item</string>
+    <string name="description_splashScreen">Application icon</string>
+    <string name="textView_no_internet_connection">No internet connection</string>
 </resources>

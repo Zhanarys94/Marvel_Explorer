@@ -12,15 +12,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
+import coil.request.CachePolicy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kz.zhanarys.domain.interfaces.repositories.local.ImageHandler
 import kz.zhanarys.domain.models.CharacterItemModel
 import kz.zhanarys.marvelexplorer.R
 import java.util.EnumSet
+import javax.inject.Inject
 
-class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdapter.CharacterViewHolder>(
-    DiffCallbackObj
-) {
+class CharactersListAdapter @Inject constructor(
+    private val imageHandler: ImageHandler,
+    private val scope: CoroutineScope
+) :
+    ListAdapter<CharacterItemModel, CharactersListAdapter.CharacterViewHolder>(DiffCallbackObj) {
+
     private var onItemClickListener: OnItemClickListener? = null
     private var onButtonLikeClickListener: OnButtonLikeClickListener? = null
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -52,21 +61,31 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
             onButtonLikeClickListener: OnButtonLikeClickListener?,
             payloads: MutableList<Any>
         ) {
-            val imageVariant = "/standard_large"
+            val imageVariant = "/standard_xlarge"
             val imageUrl = item.imageUrl + imageVariant + item.imageExtension
 
             val image = view.findViewById<ImageView>(R.id.characterItemImage)
             val name = view.findViewById<TextView>(R.id.characterItemName)
             val likeButton = view.findViewById<ImageButton>(R.id.characterItemLikeButton)
 
-            image.load(imageUrl) {
-                crossfade(true)
-                placeholder(R.drawable.loading_placeholder)
-            }
-
-            likeButton.setImageResource(R.drawable.shiled_grey)
+            likeButton.setImageResource(R.drawable.ic_shiled_grey)
             likeButton.setOnClickListener {
                 onButtonLikeClickListener?.onLikeClick(item)
+            }
+
+            if (item.isFavorite) {
+                scope.launch {
+                    val bitmap = imageHandler.getImage(item.id.toString())
+                    if (bitmap != null) {
+                        image.setImageBitmap(bitmap)
+                    } else {
+                        image.load(imageUrl) {
+                            diskCachePolicy(CachePolicy.ENABLED)
+                            placeholder(R.drawable.ic_loading_placeholder)
+                            crossfade(true)
+                        }
+                    }
+                }
             }
 
             val changes = if (payloads.isEmpty()) {
@@ -83,11 +102,12 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
                 name.text = item.name
                 likeButton.setImageResource(
                     if (item.isFavorite) {
-                        R.drawable.shield_colored
-                    } else R.drawable.shiled_grey
+                        R.drawable.ic_shield_colored
+                    } else R.drawable.ic_shiled_grey
                 )
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
             }
@@ -97,15 +117,16 @@ class CharactersListAdapter : ListAdapter<CharacterItemModel, CharactersListAdap
             }
             if (ChangeField.IMAGE_URL in changes) {
                 image.load(imageUrl) {
-                    placeholder(R.drawable.loading_placeholder)
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    placeholder(R.drawable.ic_loading_placeholder)
                     crossfade(true)
                 }
             }
             if (ChangeField.IS_FAVORITE in changes) {
                 likeButton.setImageResource(
                     if (item.isFavorite) {
-                        R.drawable.shield_colored
-                    } else R.drawable.shiled_grey
+                        R.drawable.ic_shield_colored
+                    } else R.drawable.ic_shiled_grey
                 )
             }
         }

@@ -8,12 +8,12 @@
     app:cardCornerRadius="8dp"
     android:layout_margin="8dp"
     android:contentDescription="@string/character_item"
-    app:cardBackgroundColor="?attr/cardBackgroundColor"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/cardBackgroundColor">
 
         <ImageView
             android:id="@+id/characterItemImage"
@@ -54,7 +54,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/shield_colored" />
+            tools:src="@drawable/ic_shield_colored" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,11 +1,12 @@
 package kz.zhanarys.marvelexplorer.viewModel
 
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kz.zhanarys.domain.useCases.UpdateMainListUseCase
 import kz.zhanarys.domain.models.CharacterEntityModel
@@ -23,8 +24,15 @@ class SharedViewModel @Inject constructor(
     private val addDeleteFavoritesUseCase: AddDeleteFavoritesUseCase,
     private val searchForCharacterUseCase: SearchForCharacterUseCase,
     private val favoritesListUseCase: FavoritesListUseCase,
-    private val characterDetailsUseCase: CharacterDetailsUseCase
+    private val characterDetailsUseCase: CharacterDetailsUseCase,
+    private val connectivityManager: ConnectivityManager
 ) : ViewModel() {
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _internetConnection = MutableLiveData<Boolean>()
+    val internetConnection: LiveData<Boolean> = _internetConnection
 
     private var currentOffset = 0
     private var limit = 20
@@ -45,42 +53,57 @@ class SharedViewModel @Inject constructor(
     val comicsListLiveData: LiveData<List<ComicItemModel>> = _comicsListMutableLiveData
 
     init {
-        currentOffset = 0
-        viewModelScope.launch {
-            val data = updateMainListUseCase.getAllCharacters(currentOffset, limit)
-            _charactersListMutableLiveData.value = data
-        }
+        checkInternetConnection()
+    }
+    fun checkInternetConnection() {
+        _internetConnection.value = checkConnection()
     }
 
     fun updateMainListData() {
         currentOffset = 0
+        _isLoading.value = true
         viewModelScope.launch {
             val data = updateMainListUseCase.getAllCharacters(currentOffset, limit)
-            _charactersListMutableLiveData.value = data
+            if (data == null) {
+                _isLoading.value = false
+            } else {
+                _isLoading.value = false
+                _charactersListMutableLiveData.value = emptyList<CharacterItemModel>() + data
+            }
         }
     }
 
     fun fetchMoreData() {
         viewModelScope.launch {
+            _isLoading.value = true
             currentOffset += limit
-            val data = updateMainListUseCase.getAllCharacters(currentOffset, limit)
-            _charactersListMutableLiveData.value = _charactersListMutableLiveData.value.orEmpty() + data
+            val data = updateMainListUseCase.getMoreCharacters(favoritesListLiveData.value.orEmpty(), currentOffset, limit)
+            if (data == null) {
+                _isLoading.value = false
+            } else {
+                _isLoading.value = false
+                _charactersListMutableLiveData.value = _charactersListMutableLiveData.value.orEmpty() + data
+            }
         }
     }
 
     fun fetchMoreData(searchText: String) {
+        _isLoading.value = true
+        currentOffset += limit
         viewModelScope.launch {
-            currentOffset += limit
             val data = searchForCharacterUseCase.getCharacterByNameStartingWith(searchText, currentOffset, limit)
             _charactersListMutableLiveData.value = _charactersListMutableLiveData.value.orEmpty() + data
+            _isLoading.value = false
         }
     }
 
     fun searchForCharacterByNameStartingWith(searchText: String) {
         currentOffset = 0
         viewModelScope.launch {
+            _isLoading.value = true
             val data = searchForCharacterUseCase.getCharacterByNameStartingWith(searchText, currentOffset, limit)
             _charactersListMutableLiveData.value = data
+            _isLoading.value = false
         }
     }
 
@@ -145,9 +168,15 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    suspend fun getCharacterByIdFromDb(id: Int): CharacterEntityModel {
-        return viewModelScope.async {
-            favoritesListUseCase.getCharacterById(id)
-        }.await()
+    private fun checkConnection(): Boolean {
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
     }
 }

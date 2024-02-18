@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="EditTextStyle_Marvel" parent="Widget.Material3.TextInputEditText.OutlinedBox.Dense">
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textAppearance">@style/TextAppearance_Roboto.Body2</item>
-    </style>
+
 
     <style name="TextAppearance_Marvel.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="fontFamily">@font/marvel_font_family</item>

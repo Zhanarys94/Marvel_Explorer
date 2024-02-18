@@ -1,5 +1,6 @@
 package kz.zhanarys.marvelexplorer.viewModel
 
+import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kz.zhanarys.domain.useCases.AddDeleteFavoritesUseCase
@@ -14,7 +15,8 @@ class SharedViewModelFactory @Inject constructor(
     private val addDeleteFavoritesUseCase: AddDeleteFavoritesUseCase,
     private val searchForCharacterUseCase: SearchForCharacterUseCase,
     private val favoritesListUseCase: FavoritesListUseCase,
-    private val characterDetailsUseCase: CharacterDetailsUseCase
+    private val characterDetailsUseCase: CharacterDetailsUseCase,
+    private val connectivityManager: ConnectivityManager
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
@@ -24,7 +26,8 @@ class SharedViewModelFactory @Inject constructor(
                 addDeleteFavoritesUseCase,
                 searchForCharacterUseCase,
                 favoritesListUseCase,
-                characterDetailsUseCase
+                characterDetailsUseCase,
+                connectivityManager
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
