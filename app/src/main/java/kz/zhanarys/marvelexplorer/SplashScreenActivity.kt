@@ -17,14 +17,15 @@ class SplashScreenActivity : AppCompatActivity() {
             val mainIntent = Intent(this@SplashScreenActivity, MainActivity::class.java)
             startActivity(mainIntent)
             finish()
+        } else {
+            setContentView(R.layout.splash_screen)
+            val splashScreenDuration: Long = 1000
+            Handler(Looper.getMainLooper()).postDelayed({
+                val mainIntent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                startActivity(mainIntent)
+                finish()
+            }, splashScreenDuration)
         }
 
-        setContentView(R.layout.splash_screen)
-        val splashScreenDuration: Long = 1000
-        Handler(Looper.getMainLooper()).postDelayed({
-            val mainIntent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-            startActivity(mainIntent)
-            finish()
-        }, splashScreenDuration)
     }
 }
