@@ -68,24 +68,8 @@ class CharactersListAdapter @Inject constructor(
             val name = view.findViewById<TextView>(R.id.characterItemName)
             val likeButton = view.findViewById<ImageButton>(R.id.characterItemLikeButton)
 
-            likeButton.setImageResource(R.drawable.ic_shiled_grey)
             likeButton.setOnClickListener {
                 onButtonLikeClickListener?.onLikeClick(item)
-            }
-
-            if (item.isFavorite) {
-                scope.launch {
-                    val bitmap = imageHandler.getImage(item.id.toString())
-                    if (bitmap != null) {
-                        image.setImageBitmap(bitmap)
-                    } else {
-                        image.load(imageUrl) {
-                            diskCachePolicy(CachePolicy.ENABLED)
-                            placeholder(R.drawable.ic_loading_placeholder)
-                            crossfade(true)
-                        }
-                    }
-                }
             }
 
             val changes = if (payloads.isEmpty()) {
@@ -123,6 +107,20 @@ class CharactersListAdapter @Inject constructor(
                 }
             }
             if (ChangeField.IS_FAVORITE in changes) {
+                if (item.isFavorite) {
+                    scope.launch {
+                        val bitmap = imageHandler.getImage(item.id.toString())
+                        if (bitmap != null) {
+                            image.setImageBitmap(bitmap)
+                        } else {
+                            image.load(imageUrl) {
+                                diskCachePolicy(CachePolicy.ENABLED)
+                                placeholder(R.drawable.ic_loading_placeholder)
+                                crossfade(true)
+                            }
+                        }
+                    }
+                }
                 likeButton.setImageResource(
                     if (item.isFavorite) {
                         R.drawable.ic_shield_colored
@@ -167,6 +165,17 @@ object DiffCallbackObj : DiffUtil.ItemCallback<CharacterItemModel>() {
 
     override fun areContentsTheSame(oldItem: CharacterItemModel, newItem: CharacterItemModel): Boolean {
         return oldItem == newItem
+    }
+
+    override fun getChangePayload(oldItem: CharacterItemModel, newItem: CharacterItemModel): Any? {
+        return when {
+            oldItem.name != newItem.name || oldItem.imageUrl != newItem.imageUrl || oldItem.isFavorite != newItem.isFavorite -> listOfNotNull(
+                ChangeField.NAME.takeIf { oldItem.name != newItem.name },
+                ChangeField.IMAGE_URL.takeIf { oldItem.imageUrl != newItem.imageUrl },
+                ChangeField.IS_FAVORITE.takeIf { oldItem.isFavorite != newItem.isFavorite }
+            )
+            else -> null
+        }
     }
 }
 

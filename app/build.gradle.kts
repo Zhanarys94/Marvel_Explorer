@@ -52,7 +52,7 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.7")
@@ -65,7 +65,7 @@ dependencies {
     implementation ("com.google.dagger:hilt-android:$hiltVersion")
     ksp("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
     // For instrumentation tests
     //androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
