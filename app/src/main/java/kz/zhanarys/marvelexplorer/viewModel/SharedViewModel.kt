@@ -140,6 +140,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+
     fun updateCharacterById(id: Int) {
         viewModelScope.launch {
             val list = _charactersListMutableLiveData.value!!.toMutableList()
